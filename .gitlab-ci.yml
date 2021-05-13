@@ -1,0 +1,19 @@
+stages:
+	- test
+	
+cache:
+	paths:
+		- node_modules/
+		
+test:
+	stage: test
+	image: beevelop/nodejs-python
+	variables:
+		SERVER_PORT: 3000
+		DB_URL: "mongodb://mongo/meat-api"
+	services:
+		- mongo
+	script:
+		- npm install
+		- npm test
+		

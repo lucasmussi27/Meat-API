@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "CommonJS",
+    "lib": ["ES2015", "ESNext", "DOM"],
+  },
+  "exclude": [
+    "**/*.test.ts"
+  ]
+}

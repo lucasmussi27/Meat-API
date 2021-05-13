@@ -6,6 +6,7 @@ import { mergePatchBodyParser } from './merge-patch.parser';
 import { handleError } from './error.handler';
 import { tokenParser } from '../security/token.parser';
 import * as fs from 'fs';
+import * as cors from 'restify-cors-middleware';
 import { logger } from '../common/logger';
 
 export class Server {
@@ -35,10 +36,21 @@ export class Server {
 
         this.application = restify.createServer(options);
 
+        const corsOpt: cors.Options = {
+          preflightMaxAge: 10,
+          origins: ['*'],
+          allowHeaders: ['authorization'],
+          exposeHeaders: ['x-custom-header']
+        }
+        const middleware: cors.CorsMiddleware = cors(corsOpt);
+        
+        this.application.pre(middleware.preflight);
+        
         this.application.pre(restify.plugins.requestLogger({
           log: logger
         }));
         
+        this.application.use(middleware.actual);
         this.application.use(restify.plugins.bodyParser());
         this.application.use(restify.plugins.queryParser());
         this.application.use(mergePatchBodyParser);
